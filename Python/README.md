@@ -10,10 +10,11 @@ determine which files were modified since that date. Files are downloaded in the
 file structure mimicking that on the server.
  
 
-## CLASSLA
+## RUNCLASSLA
 
-classla.py is a script that downloads all thusfar untagged files from a given project in CoNLL-U format, and the
-runs the CLASSLA tagger on that file, with the specified language (with Macedonian being the default). 
-For this, the files should have been previously tokenized. Once the
+classla.py is a script to tag/parse TEITOK documents with the CLASSLA spinoff of Stanza.
+It will downloads all thusfar untagged files from a given project in CoNLL-U format, and then
+run the CLASSLA tagger on that file, with the specified model (language, with Macedonian being the default). 
+For this to work, the files should have been previously tokenized. Once the
 file has been tagged (and parsed where available), the annotated file 
 will be uploaded back to the project, where the annotations will be loaded into the orginal TEITOK/XML file.   

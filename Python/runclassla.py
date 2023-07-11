@@ -1,8 +1,7 @@
 import requests, json, os, sys
 from pathlib import Path
 import classla
-import sys
-
+import sys, argparse
 
 # Load the configuration settings
 dir = os.path.dirname(sys.argv[0])
@@ -11,9 +10,17 @@ import apistart
 apiurl = apistart.apiurl + "?action=api"
 token = apistart.token
 
-print("Using TEITOK project: " + apiurl)
+argParser = argparse.ArgumentParser()
+argParser.add_argument("-m", "--model", help="CLASSLA model", default="mk")
+args, moreargs = argParser.parse_known_args()
 
-classla.download('mk')
+
+model = args.model
+
+print("Using TEITOK project: " + apiurl)
+print("Using model: " + model)
+
+classla.download("mk")
 nlp = classla.Pipeline(lang='mk', tokenize_pretokenized='conllu')
 
 # The URL to use to upload an RTF file
