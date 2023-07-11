@@ -19,3 +19,12 @@ For this to work, the files should have been previously tokenized. Once the
 file has been tagged (and parsed where available), the annotated file 
 will be uploaded back to the project, where the annotations will be loaded into the orginal TEITOK/XML file.  
 The script should be easy to adept to any parser that uses CoNLL-U as both input and output format. 
+
+## HFNER
+
+hfner.phy is a script to run NER on TEITOK documents with any transformer model from HuggingFace.
+It will downloads all files from a given project in CoNLL-U format, and then
+run the NER on that file (if it does not already contain names), with the specified model. 
+For this to work, the files should have been previously tokenized. Once the
+file has been ner'd, the annotated file 
+will be uploaded back to the project, where the annotations will be loaded into the orginal TEITOK/XML file.  
