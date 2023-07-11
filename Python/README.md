@@ -12,9 +12,10 @@ file structure mimicking that on the server.
 
 ## RUNCLASSLA
 
-classla.py is a script to tag/parse TEITOK documents with the CLASSLA spinoff of Stanza.
+classla.py is a script to tag/parse TEITOK documents with the [CLASSLA](https://pypi.org/project/classla/) spinoff of Stanza.
 It will downloads all thusfar untagged files from a given project in CoNLL-U format, and then
 run the CLASSLA tagger on that file, with the specified model (language, with Macedonian being the default). 
 For this to work, the files should have been previously tokenized. Once the
 file has been tagged (and parsed where available), the annotated file 
-will be uploaded back to the project, where the annotations will be loaded into the orginal TEITOK/XML file.   
+will be uploaded back to the project, where the annotations will be loaded into the orginal TEITOK/XML file.  
+The script should be easy to adept to any parser that uses CoNLL-U as both input and output format. 
