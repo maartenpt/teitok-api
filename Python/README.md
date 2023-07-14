@@ -10,12 +10,12 @@ a config.ini file. The intended use is to run the script from a folder containin
 folder for any files stored in the process. So we should for instance create a file `/home/mine/myproject/config.ini` containing 
 the TEITOK project endpoint and the authorization data:
 
-``
+```
 [DEFAULT]
 url = http://myserver.com/teitok/myproject/index.php
 username = me@mydomain.com
 password = my_password
-``
+```
 
 And then we can simply run the scripts from the folder where that config.ini is stored, so to backup just run:
 
