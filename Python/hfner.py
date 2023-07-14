@@ -6,7 +6,9 @@ import lxml.etree as etree
 
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-v", "--verbose", help="verbose mode", action='store_true')
+argParser.add_argument("--debug", help="debugging mode", action='store_true')
 argParser.add_argument("-m", "--model", help="ner model", required=True)
+argParser.add_argument("--slicexp", help="XPath for the slices to process in the XML", default='.//text//p')
 args, moreargs = argParser.parse_known_args()
 
 
@@ -15,7 +17,6 @@ dir = os.path.dirname(sys.argv[0])
 sys.path.append(dir)
 import apistart
 apiurl = apistart.apiurl + "?action=api"
-token = apistart.token
 
 print("Using TEITOK project: " + apiurl)
 
@@ -27,11 +28,10 @@ model = AutoModelForTokenClassification.from_pretrained(args.model)
 
 ner = pipeline('ner', model=model, tokenizer=tokenizer, aggregation_strategy="first")
 
-listurl = apiurl + "&act=list&status=noner&token="+token
-        
+listurl = apiurl + "&act=list&status=noner"
         
 # Get the list of all the files on the server
-response = requests.get(listurl) # Upload the file
+response = requests.get(listurl, cookies=apistart.cookies) # Upload the file
 try:
     list = response.json()
 except:
@@ -65,17 +65,27 @@ for xmlfile in list["files"]:
     namelist = output['name']
     
     if args.verbose:
-        print ("parsing " + input_file)
-    response = requests.get( apiurl + "&act=download&cid="+xmlfile+"&token="+token)
+        print ("parsing " + xmlfile)
+    response = requests.get( apiurl + "&act=download&cid="+xmlfile, cookies=apistart.cookies)
     xmlf = etree.fromstring(response.text.encode('utf-8'))
+    
+    # Check if this has been tokenized
+    if not xmlf.find(".//text//tok") is None:
+        print("not yet tokenized")
+        continue
     
     # Check if this need to be NER'ed
     if xmlf.find(".//text//name") is not None:
         print("already NER'ed")
         continue
-        
+    
+    if args.verbose:
+        print (" - starting annotation")
+    slicenr = 0
     # Go through each text slice in the XML to process the NER
-    for slice in xmlf.findall(".//text//p"):
+    for slice in xmlf.findall(args.slicexp):
+
+        slicenr = slicenr + 1
 
         toklist = slice.findall(".//tok")
         tokens = []
@@ -94,6 +104,10 @@ for xmlfile in list["files"]:
             i=i+len(word)+1
             tokpos.append(i)
         raw_input = ' '.join(tokens)
+        if raw_input == '':
+            continue
+        if args.debug:
+            print ("treating : " + raw_input)
         results = ner(raw_input)
 
         j=0
@@ -114,9 +128,14 @@ for xmlfile in list["files"]:
           newname = {"sameAs": "#" + ' #'.join(corresp), "form": result["word"], "type": result["entity_group"], "cert": str(result["score"]) }
           namelist.append(newname)
             
+    if args.verbose:
+        print (" - uploading results")
     tagf = "ner.json"
     with open(tagf, 'w') as f: f.write(json.dumps(output, indent = 4))
-    cmd = "curl -F 'infile=@"+tagf+"' '"+apiurl+"&act=annotate&format=json&token="+token+"&cid="+xmlfile+"'"
-    print(cmd)
-    os.system(cmd)
+    files = {'infile': open(tagf, 'rb')}
+    upload_url = apiurl+"&act=annotate&format=json&cid="+xmlfile
+    response = requests.post(upload_url, cookies=apistart.cookies, files=files) # Upload the file
+    print(response.text)
+#     if "error" in response.json().keys():
+#         print ("Failed to NER file: " + response.text)
         
