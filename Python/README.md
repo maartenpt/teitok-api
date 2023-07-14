@@ -46,7 +46,7 @@ run the CLASSLA tagger on that file, with the specified model (language, with Ma
 For this to work, the files should have been previously tokenized. Once the
 file has been tagged (and parsed where available), the annotated file 
 will be uploaded back to the project, where the annotations will be loaded into the orginal TEITOK/XML file.  
-The script should be easy to adept to any parser that uses CoNLL-U as both input and output format. 
+The script should be easy to adept to any parser that can use CoNLL-U as both input and output format, or forced into doing so. 
 
 ## HFNER
 
