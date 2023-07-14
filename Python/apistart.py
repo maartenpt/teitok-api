@@ -50,7 +50,7 @@ if not apiurl:
     print("Please provide the URL of a TEITOK API endpoint")
     exit()
 if apiurl[-9:] != "index.php":
-	if apiurl[-1] is not '/':
+	if apiurl[-1] != '/':
 		apiurl = apiurl + '/'
 	apiurl = apiurl + 'index.php'
 
@@ -73,13 +73,13 @@ elif args.user or ( corpus in config.keys() and "username" in config[corpus].key
 	if args.user:
 		username = args.user
 		if not args.password:
-			password = getpass("Please type in your password for " + apiurl).strip()
+			password = getpass("Please provide a password > ").strip()
 		else:
 			password = args.password
 	else:
 		username = config[corpus]['username']
 		if "password" not in config[corpus].keys():
-			password = getpass("Please type in your password for " + apiurl).strip()
+			password = getpass("Please provide a password > ").strip()
 		else:
 			password = config[corpus]['password']
 	auth_url = f'{apiurl}?action=api&act=login'
