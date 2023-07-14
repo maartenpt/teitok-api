@@ -12,7 +12,7 @@ token = apistart.token
 
 print("Using TEITOK project: " + apiurl)
 
-if not apistart.cookies and not apistart.token:
+if not "PHPSESSID" in apistart.cookies.keys():
 	print("Please provide correct credentials")
 	exit()
 

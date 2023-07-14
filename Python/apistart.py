@@ -53,7 +53,17 @@ if not apiurl:
 cookies = {}
 username = ""
 password = ""
-if args.user or ( corpus in config.keys() and "username" in config[corpus].keys() ):
+if token:
+	auth_url = f'{apiurl}?action=api&act=login'
+	auth_payload = {'token': token}
+	response = requests.post(auth_url, data=auth_payload)
+	if "sessionId" in response.json().keys():
+		access_token = response.json()['sessionId'];
+	else:
+		print("login failed: " + response.text)
+		access_token = ""
+	cookies = {'PHPSESSID': access_token}
+elif args.user or ( corpus in config.keys() and "username" in config[corpus].keys() ):
 	if args.user:
 		username = args.user
 		if not args.password:
