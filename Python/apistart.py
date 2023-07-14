@@ -13,12 +13,12 @@ argParser.add_argument("-c", "--corpus", help="Corpus ID")
 argParser.add_argument("-s", "--silent", help="silent mode", action='store_true')
 argParser.add_argument("--user", help="TEITOK username")
 argParser.add_argument("--password", help="TEITOK password")
-# args = argParser.parse_args()
 args, moreargs = argParser.parse_known_args()
 
 curdir = os.path.basename(os.getcwd())
 inifile = args.settings or "./config.ini"
 
+# The default corpus is [DEFAULT]
 corpus = args.corpus or "DEFAULT"
 
 # Emulate configparse
@@ -39,16 +39,21 @@ if os.path.exists(inifile):
                 config[sts][m2.group(1)] = m2.group(2)
 
 
+# Establish the URL of the TEITOK endpoint
 apiurl = args.url
 if not apiurl and corpus in config.keys() and "url" in config[corpus].keys():
     apiurl = config[corpus]["url"]
 token = args.token 
 if not token and corpus in config.keys() and "token" in config[corpus].keys():
     token = config[corpus]["token"]
-
 if not apiurl:
     print("Please provide the URL of a TEITOK API endpoint")
     exit()
+if apiurl[-9:] != "index.php":
+	if apiurl[-1] is not '/':
+		apiurl = apiurl + '/'
+	apiurl = apiurl + 'index.php'
+
 
 # Authenticate where needed
 cookies = {}
