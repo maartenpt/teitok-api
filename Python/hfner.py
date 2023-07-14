@@ -70,7 +70,7 @@ for xmlfile in list["files"]:
     xmlf = etree.fromstring(response.text.encode('utf-8'))
     
     # Check if this has been tokenized
-    if not xmlf.find(".//text//tok") is None:
+    if xmlf.find(".//text//tok") is None:
         print("not yet tokenized")
         continue
     

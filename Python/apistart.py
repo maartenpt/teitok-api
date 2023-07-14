@@ -2,6 +2,7 @@ import argparse
 import os
 import re
 import requests
+from getpass import getpass
 
 # Default header to get the URL and token for the project
 argParser = argparse.ArgumentParser()
@@ -67,15 +68,13 @@ elif args.user or ( corpus in config.keys() and "username" in config[corpus].key
 	if args.user:
 		username = args.user
 		if not args.password:
-			print("Please type in your password for " + apiurl)
-			password = input().strip()
+			password = getpass("Please type in your password for " + apiurl).strip()
 		else:
 			password = args.password
 	else:
 		username = config[corpus]['username']
 		if "password" not in config[corpus].keys():
-			print("Please type in your password for " + apiurl)
-			password = input().strip()
+			password = getpass("Please type in your password for " + apiurl).strip()
 		else:
 			password = config[corpus]['password']
 	auth_url = f'{apiurl}?action=api&act=login'
