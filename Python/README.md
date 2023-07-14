@@ -61,4 +61,7 @@ will be uploaded back to the project, where the annotations will be loaded into 
 
 transkr2teitok.py is a script to create TEITOK documents out of Transkribus collections. It downloads the indicated file(s)
 from the Transkribus API, and then uploads the results to the TEITOK corpus. The Transkribus login data should be provided in 
-a [transkribus] section in the config.ini file.
+a [transkribus] section in the config.ini file. The collection ID should be provided as an argument (``--collection collection_id``),
+if not provided, a list of all collections will be given. Similarly, a document ID should be provides
+(``--document document_id``), which can be set to `all`. Again, not proving a document will provide a list of all documents.
+The conversion uses the TEITOK pages2teitok.pl script from the teitok-tools rather than the TEI export from Transkribus itself.
