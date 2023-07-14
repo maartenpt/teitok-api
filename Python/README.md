@@ -23,6 +23,11 @@ And then we can simply run the scripts from the folder where that config.ini is 
 cd /home/mine/myproject ; python /home/git/teitok-api/Python/backup.py
 ``
 
+But it is also possible to define multiple corpora and indicate the corpus you want to use (``--corpus corpusid``), provide
+a token instead of a username and password, provide the token (``--token token``) as an argument, or the username 
+as an argument (``--user userid``) which will ask for the password when running the script. Upon login, apistart.py creates
+a cookie, which should then be sent along with each subsequent request.
+
 ## BACKUP
 
 backup.py is a script that makes a local backup of all the files in a given project. Each backup will only 
