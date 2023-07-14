@@ -1,6 +1,7 @@
 import argparse
 import os
 import re
+import requests
 
 # Default header to get the URL and token for the project
 argParser = argparse.ArgumentParser()
@@ -34,6 +35,7 @@ if os.path.exists(inifile):
             elif m2:
                 config[sts][m2.group(1)] = m2.group(2)
 
+
 apiurl = args.url
 if not apiurl and corpus in config.keys() and "url" in config[corpus].keys():
     apiurl = config[corpus]["url"]
@@ -42,5 +44,24 @@ if not token and corpus in config.keys() and "token" in config[corpus].keys():
     token = config[corpus]["token"]
 
 if not apiurl:
-    print("Please provide an API URL")
+    print("Please provide the URL of a TEITOK API endpoint")
     exit()
+
+# Authenticate where needed
+cookies = {}
+if "username" in config[corpus].keys():
+	username = config[corpus]['username']
+	if "password" not in config[corpus].keys():
+		print("Please type in your password for " + apiurl)
+		password = input().strip()
+	else:
+		password = config[corpus]['password']
+	auth_url = f'{apiurl}?action=api&act=login'
+	auth_payload = {'user': username, 'pw': password}
+	response = requests.post(auth_url, data=auth_payload)
+	if "sessionId" in response.json().keys():
+		access_token = response.json()['sessionId'];
+	else:
+		print("login failed: " + response.text)
+		access_token = ""
+	cookies = {'PHPSESSID': access_token}

@@ -1,5 +1,28 @@
 # Python scripts
 
+This folder provides a collection of Python scripts to interact with the TEITOK API. They have not been extensively tested
+and might contain occassional bugs or uncaught errors.
+
+The Python scripts provided by the TEITOK team all use the apistart.py script to connect to the TEITOK corpus (although
+scripts provided by contributors might not). The set-up provides the option to either use an authentication token (which 
+can be generated via the GUI), or use the TEITOK login and password. Both can be given either as an argument, or stored in 
+a config.ini file. The intended use is to run the script from a folder containing congif.ini file, and the script will use that 
+folder for any files stored in the process. So we should for instance create a file `/home/mine/myproject/config.ini` containing 
+the TEITOK project endpoint and the authorization data:
+
+``
+[DEFAULT]
+url = http://myserver.com/teitok/myproject/index.php
+username = me@mydomain.com
+password = my_password
+``
+
+And then we can simply run the scripts from the folder where that config.ini is stored, so to backup just run:
+
+``
+cd /home/mine/myproject ; python /home/git/teitok-api/Python/backup.py
+``
+
 ## BACKUP
 
 backup.py is a script that makes a local backup of all the files in a given project. Each backup will only 
@@ -28,3 +51,9 @@ run the NER on that file (if it does not already contain names), with the specif
 For this to work, the files should have been previously tokenized. Once the
 file has been ner'd, the annotated file 
 will be uploaded back to the project, where the annotations will be loaded into the orginal TEITOK/XML file.  
+
+## TRANSKR2TEITOK
+
+transkr2teitok.py is a script to create TEITOK documents out of Transkribus collections. It downloads the indicated file(s)
+from the Transkribus API, and then uploads the results to the TEITOK corpus. The Transkribus login data should be provided in 
+a [transkribus] section in the config.ini file.
