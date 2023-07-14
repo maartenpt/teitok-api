@@ -7,9 +7,11 @@ import requests
 argParser = argparse.ArgumentParser()
 argParser.add_argument("-t", "--token", help="Authorization token")
 argParser.add_argument("-u", "--url", help="TEITOK corpus project URL")
-argParser.add_argument("-d", "--settings", help="Settings file")
+argParser.add_argument("--settings", help="Settings file")
 argParser.add_argument("-c", "--corpus", help="Corpus ID")
 argParser.add_argument("-s", "--silent", help="silent mode", action='store_true')
+argParser.add_argument("--user", help="TEITOK username")
+argParser.add_argument("--password", help="TEITOK password")
 # args = argParser.parse_args()
 args, moreargs = argParser.parse_known_args()
 
@@ -49,13 +51,23 @@ if not apiurl:
 
 # Authenticate where needed
 cookies = {}
-if "username" in config[corpus].keys():
-	username = config[corpus]['username']
-	if "password" not in config[corpus].keys():
-		print("Please type in your password for " + apiurl)
-		password = input().strip()
+username = ""
+password = ""
+if args.user or ( corpus in config.keys() and "username" in config[corpus].keys() ):
+	if args.user:
+		username = args.user
+		if not args.password:
+			print("Please type in your password for " + apiurl)
+			password = input().strip()
+		else:
+			password = args.password
 	else:
-		password = config[corpus]['password']
+		username = config[corpus]['username']
+		if "password" not in config[corpus].keys():
+			print("Please type in your password for " + apiurl)
+			password = input().strip()
+		else:
+			password = config[corpus]['password']
 	auth_url = f'{apiurl}?action=api&act=login'
 	auth_payload = {'user': username, 'pw': password}
 	response = requests.post(auth_url, data=auth_payload)

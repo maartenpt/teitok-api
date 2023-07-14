@@ -12,8 +12,12 @@ token = apistart.token
 
 print("Using TEITOK project: " + apiurl)
 
+if not apistart.cookies and not apistart.token:
+	print("Please provide correct credentials")
+	exit()
+
 # The URL to use to upload an RTF file
-listurl = apiurl + "&act=list&token="+token
+listurl = apiurl + "&act=list"
 
 if os.path.exists("lastbu.txt"):
     with open("lastbu.txt", "r") as file:
@@ -22,7 +26,7 @@ if os.path.exists("lastbu.txt"):
     listurl = listurl + "&since=" + urllib.parse.quote_plus(last)
         
 # Get the list of all the files on the server
-response = requests.get(listurl) # Upload the file
+response = requests.get(listurl, cookies=apistart.cookies) # Upload the file
 try:
     list = response.json()
 except:
@@ -37,7 +41,7 @@ if "error" in list.keys():
 for filename in list['files']:
     print(filename)
     os.makedirs(os.path.dirname(filename), exist_ok=True)
-    response = requests.get( apiurl + "&act=download&cid="+filename+"&token="+token)
+    response = requests.get( apiurl + "&act=download&cid="+filename, cookies=apistart.cookies)
     with open(filename, "w") as f:
         f.write(response.text)    
         
